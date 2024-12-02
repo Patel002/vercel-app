@@ -16,13 +16,13 @@ const app = express();
 
 const API_URL = "http://192.168.1.11/rppl/api/get-project-data?id=7";
 
-// Serve static assets from the 'assets' directory
+
 app.use("/assets", express.static(path.join(__dirname, "..", "assets")));
 
-// Endpoint to generate and view the PDF
+
 app.get("/generate-pdf", async (req, res) => {
   try {
-    // Fetch data from the API
+  
     const response = await axios.get(API_URL);
     const { status, comp_data, project_data, to_data, emails, letter_type } =
       response.data;
@@ -45,30 +45,14 @@ app.get("/generate-pdf", async (req, res) => {
       city_village,
     } = project_data;
 
-    // Use the correct path to the letterhead image for PDF generation
-    // const letterheadPath = path.resolve(__dirname, "..", "assets", letter_head);
-
-    // // Check if the letterhead image exists
-    // if (!fs.existsSync(letterheadPath)) {
-    //   console.error("Letterhead file not found:", letterheadPath);
-    //   return res.status(500).send("Letterhead file not found.");
-    // }
-
-    // Use the correct font path for PDF generation
-    // const fontPath = path.resolve(
-    //   __dirname,
-    //   "..",
-    //   "assets",
-    //   "font",
-    //   "MuktaVaani-Regular.ttf"
-    // );
+  
     const fontPath = path.join(
       "C:/Users/lenovo/Downloads/Mukta_Vaani/MuktaVaani-Regular.ttf"
     );
 
     const boldFontPath = path.join("C:/Users/lenovo/Downloads/Mukta_Vaani/MuktaVaani-Medium.ttf")
 
-    // Ensure the font file exists
+    
     if (!fs.existsSync(fontPath)) {
       console.error("Font file not found:", fontPath);
       return res.status(500).send("Font file not found.");
@@ -79,25 +63,22 @@ app.get("/generate-pdf", async (req, res) => {
         return res.status(500).send("Font file not found.");
       }
 
-    // Create a new PDF document
     const doc = new PDFDocument({
       size: "A4",
       margin: 50,
     });
 
-    // Set the response headers for PDF content
+  
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline; filename=generated.pdf");
 
-    // Pipe the PDF document to the response stream
     doc.pipe(res);
 
     const pagewidth = doc.page.width;
     const pageheight = doc.page.height;
     const topMargin = 150;
 
-    // Add the letterhead as the background
-    // doc.image(letterheadPath, 0, 0, { width: pageWidth, height: pageHeight });
+  
     doc
       .image("C:/Users/lenovo/Downloads/letter_head.jpg", 0, 0, {
         width: pagewidth,
@@ -151,7 +132,7 @@ app.get("/generate-pdf", async (req, res) => {
     doc.moveDown(-0.2);
     doc.text(`GST No: ${gst_no}, PAN No: ${pan_no}`);
 
-    // Finalize the PDF and send it to the browser
+
     doc.end();
   } catch (error) {
     console.error("Error generating PDF:", error.message);
