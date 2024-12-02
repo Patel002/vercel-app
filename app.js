@@ -3,8 +3,13 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 import axios from "axios";
+import dotenv from "dotenv";
 
-// Use import.meta.url to get the directory path in ES modules
+
+dotenv.config({
+  path: './.env'
+})
+
 const getDirname = (importMetaUrl) => {
   const url = new URL(importMetaUrl);
   return path.dirname(url.pathname);
@@ -13,7 +18,6 @@ const getDirname = (importMetaUrl) => {
 const __dirname = getDirname(import.meta.url); // Ensure this is initialized correctly
 
 const app = express();
-const port = 3000;
 
 const API_URL = "http://192.168.1.11/rppl/api/get-project-data?id=7";
 
@@ -161,6 +165,6 @@ app.get("/generate-pdf", async (req, res) => {
 });
 
 // Start the Express server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(process.env.PORT , () => {
+  console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
