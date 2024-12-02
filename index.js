@@ -12,4 +12,4 @@ app.listen(process.env.PORT , () => {
 });
 
 
-
+export default app
