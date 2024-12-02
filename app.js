@@ -3,12 +3,6 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 import axios from "axios";
-import dotenv from "dotenv";
-
-
-dotenv.config({
-  path: './.env'
-})
 
 const getDirname = (importMetaUrl) => {
   const url = new URL(importMetaUrl);
@@ -164,7 +158,5 @@ app.get("/generate-pdf", async (req, res) => {
   }
 });
 
-// Start the Express server
-app.listen(process.env.PORT , () => {
-  console.log(`Server is running on http://localhost:${process.env.PORT}`);
-});
+
+export { app}
