@@ -140,4 +140,4 @@ app.get("/generate-pdf", async (req, res) => {
   }
 }); 
 
-export { app };
+export default app
