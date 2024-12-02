@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import axios from "axios";
 
+
 const getDirname = (importMetaUrl) => {
   const url = new URL(importMetaUrl);
   return path.dirname(url.pathname);
@@ -156,7 +157,6 @@ app.get("/generate-pdf", async (req, res) => {
     console.error("Error generating PDF:", error.message);
     res.status(500).send("An error occurred while generating the PDF.");
   }
-});
+}); 
 
-
-export { app}
+export { app };
