@@ -12,7 +12,7 @@ const getDirname = (importMetaUrl) => {
   return path.dirname(url.pathname);
 };
 
-const __dirname = getDirname(import.meta.url);
+const __dirname = path.resolve()
 const app = express();
 
 const API_URL =
@@ -45,13 +45,16 @@ app.get("/generate-pdf", async (req, res) => {
       city_village,
     } = project_data;
 
-    const fontPath = path.join(
-      "C:/Users/lenovo/OneDrive/Desktop/pdf/assets/MuktaVaani-Regular.ttf"
-    );
+    const fontPath = path.join(__dirname, "assets", "MuktaVaani-Medium.ttf");
+    console.log(fontPath,"fontPath");
+    
 
     const boldFontPath = path.join(
-      "C:/Users/lenovo/OneDrive/Desktop/pdf/assets/MuktaVaani-Medium.ttf"
+      __dirname, "assets", 'MuktaVaani-Medium.ttf'
     );
+
+    console.log("boldFontPath", boldFontPath );
+    
 
     if (!fs.existsSync(fontPath)) {
       console.error("Font file not found:", fontPath);
@@ -78,11 +81,12 @@ app.get("/generate-pdf", async (req, res) => {
     const topMargin = 150;
 
     doc
-      .image("C:/Users/lenovo/OneDrive/Desktop/pdf/assets/letter_head.jpg", 0, 0, {
+      .image(path.join(__dirname, "assets","letter_head.jpg"), 0, 0, {
         width: pagewidth,
         height: pageheight,
       })
       .stroke();
+      
 
     doc
       .font(boldFontPath)
