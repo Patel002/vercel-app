@@ -9,7 +9,7 @@
     "routes": [
       {
         "src": "/generate-pdf",
-        "dest": "/index.js"
+        "dest": "index.js"
       }
     ]
   }
