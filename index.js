@@ -3,24 +3,25 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 import axios from "axios";
+import dontenv from "dotenv";
 
+dontenv.config();
 
 const getDirname = (importMetaUrl) => {
   const url = new URL(importMetaUrl);
   return path.dirname(url.pathname);
 };
 
-const __dirname = getDirname(import.meta.url); // Ensure this is initialized correctly
-
+const __dirname = getDirname(import.meta.url); 
 const app = express();
 
-const API_URL = "http://192.168.1.11/rppl/api/get-project-data?id=7";
+const API_URL = process.env.API_URL || "http://192.168.1.11/rppl/api/get-project-data?id=7";
 
 
-app.use("/api/assets", express.static(path.join(__dirname, "..", "assets")));
+app.use("/assets", express.static(path.join(__dirname, "..", "assets")));
 
 
-app.get("/api/generate-pdf", async (req, res) => {
+app.get("/generate-pdf", async (req, res) => {
   try {
   
     const response = await axios.get(API_URL);
@@ -47,10 +48,10 @@ app.get("/api/generate-pdf", async (req, res) => {
 
   
     const fontPath = path.join(
-      "C:/Users/lenovo/Downloads/Mukta_Vaani/MuktaVaani-Regular.ttf"
+      "C:/Users/lenovo/OneDrive/Desktop/pdf/assets/MuktaVaani-Regular.ttf"
     );
 
-    const boldFontPath = path.join("C:/Users/lenovo/Downloads/Mukta_Vaani/MuktaVaani-Medium.ttf")
+    const boldFontPath = path.join("C:/Users/lenovo/OneDrive/Desktop/pdf/assets/MuktaVaani-Medium.ttf")
 
     
     if (!fs.existsSync(fontPath)) {
@@ -139,5 +140,9 @@ app.get("/api/generate-pdf", async (req, res) => {
     res.status(500).send("An error occurred while generating the PDF.");
   }
 }); 
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Server is running on port");
+})
 
 export default app
