@@ -12,18 +12,17 @@ const getDirname = (importMetaUrl) => {
   return path.dirname(url.pathname);
 };
 
-const __dirname = getDirname(import.meta.url); 
+const __dirname = getDirname(import.meta.url);
 const app = express();
 
-const API_URL = process.env.API_URL || "http://192.168.1.11/rppl/api/get-project-data?id=7";
-
+const API_URL =
+  process.env.API_URL ||
+  "https://rppl.customedgeerp.com/api/get-project-data?id=7";
 
 app.use("/assets", express.static(path.join(__dirname, "..", "assets")));
 
-
 app.get("/generate-pdf", async (req, res) => {
   try {
-  
     const response = await axios.get(API_URL);
     const { status, comp_data, project_data, to_data, emails, letter_type } =
       response.data;
@@ -46,30 +45,29 @@ app.get("/generate-pdf", async (req, res) => {
       city_village,
     } = project_data;
 
-  
     const fontPath = path.join(
       "C:/Users/lenovo/OneDrive/Desktop/pdf/assets/MuktaVaani-Regular.ttf"
     );
 
-    const boldFontPath = path.join("C:/Users/lenovo/OneDrive/Desktop/pdf/assets/MuktaVaani-Medium.ttf")
+    const boldFontPath = path.join(
+      "C:/Users/lenovo/OneDrive/Desktop/pdf/assets/MuktaVaani-Medium.ttf"
+    );
 
-    
     if (!fs.existsSync(fontPath)) {
       console.error("Font file not found:", fontPath);
       return res.status(500).send("Font file not found.");
     }
 
     if (!fs.existsSync(boldFontPath)) {
-        console.error("Font file not found:", boldFontPath);
-        return res.status(500).send("Font file not found.");
-      }
+      console.error("Font file not found:", boldFontPath);
+      return res.status(500).send("Font file not found.");
+    }
 
     const doc = new PDFDocument({
       size: "A4",
       margin: 50,
     });
 
-  
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline; filename=generated.pdf");
 
@@ -79,9 +77,8 @@ app.get("/generate-pdf", async (req, res) => {
     const pageheight = doc.page.height;
     const topMargin = 150;
 
-  
     doc
-      .image("C:/Users/lenovo/Downloads/letter_head.jpg", 0, 0, {
+      .image("C:/Users/lenovo/OneDrive/Desktop/pdf/assets/letter_head.jpg", 0, 0, {
         width: pagewidth,
         height: pageheight,
       })
@@ -107,14 +104,34 @@ app.get("/generate-pdf", async (req, res) => {
     doc.text(city_village);
 
     doc.moveDown(0.5);
-    doc.font(boldFontPath).fontSize(12).text(`Subject:`,{continued: true}).font(fontPath).fontSize(12).text(`${subject}`);
+    doc
+      .font(boldFontPath)
+      .fontSize(12)
+      .text(`Subject:`, { continued: true })
+      .font(fontPath)
+      .fontSize(12)
+      .text(`${subject}`);
     doc.moveDown(0.2);
 
     doc
-    .font(boldFontPath)
+      .font(boldFontPath)
       .fontSize(12)
-      .text(`Name of work:`,{continued: true}).font(fontPath).fontSize(12).text(` ${name_of_work}`, { align: "justify", lineGap: -3 });
-    doc.fontSize(12).text(`Ref: `,{continued: true}).font(fontPath).fontSize(12).text(`${ref}`, { align: "justify" }).font(boldFontPath).fontSize(12).text(`E-mail:`,{continued: true}).font(fontPath).fontSize(12).text(`${emails}`);
+      .text(`Name of work:`, { continued: true })
+      .font(fontPath)
+      .fontSize(12)
+      .text(` ${name_of_work}`, { align: "justify", lineGap: -3 });
+    doc
+      .fontSize(12)
+      .text(`Ref: `, { continued: true })
+      .font(fontPath)
+      .fontSize(12)
+      .text(`${ref}`, { align: "justify" })
+      .font(boldFontPath)
+      .fontSize(12)
+      .text(`E-mail:`, { continued: true })
+      .font(fontPath)
+      .fontSize(12)
+      .text(`${emails}`);
 
     doc.moveDown(0.5);
     doc.fontSize(12).text("Respected sir,");
@@ -133,16 +150,15 @@ app.get("/generate-pdf", async (req, res) => {
     doc.moveDown(-0.2);
     doc.text(`GST No: ${gst_no}, PAN No: ${pan_no}`);
 
-
     doc.end();
   } catch (error) {
     console.error("Error generating PDF:", error.message);
     res.status(500).send("An error occurred while generating the PDF.");
   }
-}); 
+});
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server is running on port");
-})
+});
 
-export default app
+export default app;
